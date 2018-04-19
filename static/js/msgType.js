@@ -36,7 +36,7 @@
         14,
         {});
     define('STOP_LATENCY',
-        14,
+        15,
         {});
     // broadcast by the server when a player has connected
     define(
