@@ -30,9 +30,10 @@ Game.prototype.connect = function(){
 }
 Game.prototype.handlers = {
     onError: function(err){
+        console.log(err);
         //show connection dialog
         document.getElementById('btnConnect').textContent = 'Error connecting; Retry?';
-        document.findElementById('connectDialog').style.display = 'flex';
+        document.getElementById('connectDialog').style.display = 'flex';
     },
     onOpen: function(event){
         // socket connection has been accepted

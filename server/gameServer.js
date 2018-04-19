@@ -23,13 +23,16 @@ function saveLatencyStack(player){
     player.latency = [];
 }
 Server.prototype.stopLatencyTest = function(){
+    console.log('stopping test');
     this.players._players.forEach(function(player){
-        if(typeof(player.pingInterval) == 'number') clearInterval(player.pingInterval);
+        clearInterval(player.pingInterval);
         player.pingInterval = null;
     });
 }
-Server.prototype.startLatencyTest = function(data,interval){
+Server.prototype.startLatencyTest = function(datalength,interval){
     this.stopLatencyTest();
+    console.log('starting test');
+    data = nanoid(datalength);
     this.players._players.forEach(function(player){
         player.pingInterval = setInterval(function(){
             player.pingSent = process.hrtime();
