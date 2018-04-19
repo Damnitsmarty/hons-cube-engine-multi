@@ -94,7 +94,7 @@ Server.prototype.handlers = {
                     console.log(`${player.name}:ping ${player.latency.length}: ${diff[1]}ns (${ms}ms)`);
                     player.latency.push(ms);
 
-                    if(player.latency.length >= 180){
+                    if(player.latency.length == 300){
                         ws.send(JSON.stringify({
                             type: MSG.TYPE.LATENCY_REPORT,
                             data: player.latency
@@ -106,7 +106,7 @@ Server.prototype.handlers = {
                 player.pingInterval = setInterval(function(){
                     player.pingSent = process.hrtime();
                     ws.ping('pingdatapingdatapingdata');
-                },1000)
+                },500)
 
                 // send the player information needed to construct the world
                 var str = JSON.stringify({
