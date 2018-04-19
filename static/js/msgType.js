@@ -29,11 +29,15 @@
     define('LATENCY_REPORT',
         13,
         {
-            
+
         }
     );
-
-
+    define('START_LATENCY',
+        14,
+        {});
+    define('STOP_LATENCY',
+        14,
+        {});
     // broadcast by the server when a player has connected
     define(
         'INFO_PLAYER_JOINED',

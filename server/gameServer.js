@@ -22,7 +22,21 @@ function saveLatencyStack(player){
     player.id = nanoid();
     player.latency = [];
 }
-
+Server.prototype.stopLatencyTest = function(){
+    this.players._players.forEach(function(player){
+        if(typeof(player.pingInterval) == 'number') clearInterval(player.pingInterval);
+        player.pingInterval = null;
+    });
+}
+Server.prototype.startLatencyTest = function(data,interval){
+    this.stopLatencyTest();
+    this.players._players.forEach(function(player){
+        player.pingInterval = setInterval(function(){
+            player.pingSent = process.hrtime();
+            ws.ping(data);
+        },parseInt(interval));
+    });
+}
 
 // constructor
 function Server(httpServer){
@@ -103,10 +117,7 @@ Server.prototype.handlers = {
                     }
                 });
 
-                player.pingInterval = setInterval(function(){
-                    player.pingSent = process.hrtime();
-                    ws.ping('pingdatapingdatapingdata');
-                },500)
+
 
                 // send the player information needed to construct the world
                 var str = JSON.stringify({
@@ -131,6 +142,12 @@ Server.prototype.handlers = {
         console.log(`${this.players.findBySocket(ws).name}:`, payload);
 
         switch (type) {
+            case MSG.TYPE.START_LATENCY:
+                this.startLatencyTest(data.d,data.i);
+                break;
+            case MSG.TYPE.STOP_LATENCY:
+                this.stopLatencyTest();
+                break;
             case MSG.TYPE.LATENCY_REPORT:
                 var player = this.players.findBySocket(ws);
                 ws.send(JSON.stringify({
