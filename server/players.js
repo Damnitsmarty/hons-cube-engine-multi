@@ -20,7 +20,7 @@ Player.prototype.setPosition = function(pos){
     this.position = pos;
 }
 Player.prototype.getChunk = function(){
-    if(typeof(this.position) !== 'object' || typeof(this.position.x) !== 'number' || typeof(this.position.z) !== 'number') {
+    if(typeof(this.position) !== 'object' || this.position == null) {
         this.position = {x:0, y:20, z:0};
         return {
             cx:0,
