@@ -14,7 +14,7 @@ const app = require('connect')();
 // static content delivery middleware for connect
 const serveStatic = require('serve-static');
 
-const SERVER_PORT = 3000;
+const SERVER_PORT = process.env.PORT || 3000;
 const STATIC_PATH = path.join(__dirname,'../static');
 
 // ========================= HTTP SERVER MIDDLEWARES

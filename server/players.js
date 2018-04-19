@@ -5,6 +5,8 @@
 // nanoid provides an unique ids to all players
 const nanoid = require('nanoid');
 const MSG = require('../static/js/msgType');
+var fs = require('fs');
+
 
 // single player class
 function Player(id, name, socket){
@@ -12,12 +14,19 @@ function Player(id, name, socket){
     this.socket = socket;
     this.name = name;
     this.position = null;
+    this.latency = [];
 }
 Player.prototype.setPosition = function(pos){
     this.position = pos;
 }
 Player.prototype.getChunk = function(){
-    if(typeof(this.position) !== 'object') return null;
+    if(typeof(this.position) !== 'object' || typeof(this.position.x) !== 'number' || typeof(this.position.z) !== 'number') {
+        this.position = {x:0, y:20, z:0};
+        return {
+            cx:0,
+            cz:0
+        };m
+    }
     return {
         cx: Math.floor(this.position.x / 16),
         cz: Math.floor(this.position.z / 16)
@@ -69,6 +78,9 @@ PlayerPool.prototype.removePlayer = function(ws){
     var index = this._players.findIndex((player) => player.socket === ws);
     if(index < 0) return false;
 
+    //latency
+    var player = this._players[index];
+    clearInterval(player.pingInterval);
     // get the player's name before removing
     var name = this._players[index].name;
     // remove the player by shifting the Array
@@ -79,6 +91,7 @@ PlayerPool.prototype.removePlayer = function(ws){
     this.broadcast(MSG.TYPE.INFO_PLAYER_LEFT,{
         'playerName': name,
     });
+
     return true;
 }
 // sends a message to all players

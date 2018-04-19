@@ -3,6 +3,25 @@ const PlayerPool = require('./players');
 const MSG = require('../static/js/msgType');
 const WS = require('ws');
 const BlockChanges = require('./blockChanges')
+const fs = require('fs');
+const nanoid = require('nanoid');
+
+function saveLatencyStack(player){
+    var str = JSON.stringify(player.latency);
+
+    //write latency to file
+    fs.writeFile(`./latencyReps/${player.name}-${player.id}.json`, JSON.stringify(player.latency), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log(`${player.name}:Latency file saved`);
+    });
+
+
+    player.id = nanoid();
+    player.latency = [];
+}
 
 
 // constructor
@@ -51,7 +70,7 @@ Server.prototype.handlers = {
         // keep a shortcut to the sending client
         var ws = e.target;
 
-        console.log('NonPlayer:',payload);
+        //console.log('NonPlayer:',payload);
         switch (payload.type) {
             case MSG.TYPE.REQUEST_JOIN:
                 // client wants to join the game
@@ -62,6 +81,28 @@ Server.prototype.handlers = {
                 //TODO: avoid using bind in addEventListener as it may cause memory leaks!
                 ws.onmessage = this.handlers.onPlayerMessage.bind(this);
                 ws.onclose = this.handlers.onPlayerDisconnect.bind(this);
+
+
+                // TESTING
+                var player = this.players.findBySocket(ws);
+
+                //pong latency function
+                ws.on('pong',function(){
+                    const diff = process.hrtime(player.pingSent);
+                    const ms = diff[0] * 1000 + diff[1] * 1e-6;
+
+                    console.log(`${player.name}:ping ${player.latency.length}: ${diff[1]}ns (${ms}ms)`);
+                    player.latency.push(ms);
+
+                    if(player.latency.length >= 180){
+                        saveLatencyStack(player);
+                    }
+                });
+
+                player.pingInterval = setInterval(function(){
+                    player.pingSent = process.hrtime();
+                    ws.ping('pingdatapingdatapingdata');
+                },1000)
 
                 // send the player information needed to construct the world
                 var str = JSON.stringify({
