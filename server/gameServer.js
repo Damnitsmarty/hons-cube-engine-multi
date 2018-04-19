@@ -137,6 +137,7 @@ Server.prototype.handlers = {
                     type: MSG.TYPE.LATENCY_REPORT,
                     data: player.latency
                 }));
+                break;
             case MSG.TYPE.PLAYER_CHAT_SENT:
                 var player = this.players.findBySocket(ws);
                 this.players.broadcast(MSG.TYPE.PLAYER_CHAT_SENT, {text:player.name + ": " + data.text});

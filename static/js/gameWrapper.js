@@ -55,6 +55,9 @@ Game.prototype.handlers = {
         var data = payload.data;
 
         switch (payload.type) {
+            case MSG.TYPE.LATENCY_REPORT;
+                console.log(data);
+                break;
             case MSG.TYPE.PLAYER_CHAT_SENT:
                 var el = document.createElement("div");
                 el.setAttribute("class","message");
