@@ -17,8 +17,8 @@ Game.prototype.connect = function(){
 
     if(this.wsURI.length < 7) return false;
     if(this.pName.length < 3) this.pName = 'Guest';
-    if(!this.wsURI.startsWith('ws://')) this.wsURI = 'ws://' + this.wsURI;
-    this.wsURI = this.wsURI + "";
+    //if(!this.wsURI.startsWith('ws://')) this.wsURI = 'ws://' + this.wsURI;
+    //this.wsURI = this.wsURI + "";
 
     document.getElementById('btnConnect').textContent = 'Connecting';
     // create the socket and connect
