@@ -26,6 +26,14 @@
             'message':'string',
         }
     );
+    define('LATENCY_REPORT',
+        13,
+        {
+            
+        }
+    );
+
+
     // broadcast by the server when a player has connected
     define(
         'INFO_PLAYER_JOINED',

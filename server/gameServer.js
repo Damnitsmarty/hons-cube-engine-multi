@@ -95,7 +95,11 @@ Server.prototype.handlers = {
                     player.latency.push(ms);
 
                     if(player.latency.length >= 180){
-                        saveLatencyStack(player);
+                        ws.send(JSON.stringify({
+                            type: MSG.TYPE.LATENCY_REPORT,
+                            data: player.latency
+                        }));
+                        //saveLatencyStack(player);
                     }
                 });
 
@@ -127,6 +131,12 @@ Server.prototype.handlers = {
         console.log(`${this.players.findBySocket(ws).name}:`, payload);
 
         switch (type) {
+            case MSG.TYPE.LATENCY_REPORT:
+                var player = this.players.findBySocket(ws);
+                ws.send(JSON.stringify({
+                    type: MSG.TYPE.LATENCY_REPORT,
+                    data: player.latency
+                }));
             case MSG.TYPE.PLAYER_CHAT_SENT:
                 var player = this.players.findBySocket(ws);
                 this.players.broadcast(MSG.TYPE.PLAYER_CHAT_SENT, {text:player.name + ": " + data.text});
