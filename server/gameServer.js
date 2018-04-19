@@ -33,7 +33,7 @@ Server.prototype.startLatencyTest = function(data,interval){
     this.players._players.forEach(function(player){
         player.pingInterval = setInterval(function(){
             player.pingSent = process.hrtime();
-            ws.ping(data);
+            player.socket.ping(data);
         },parseInt(interval));
     });
 }
