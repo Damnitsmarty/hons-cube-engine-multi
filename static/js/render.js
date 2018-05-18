@@ -179,6 +179,7 @@ Renderer.prototype.mouseLockChangeCallback = function()
 	{
 		document.addEventListener('mousemove', this.renderer.mouseMoveCallback, false);
 		this.renderer.mouselock = true;
+        this.canvas.focus();
 	}
 	else
 	{
